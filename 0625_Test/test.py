@@ -1,9 +1,16 @@
-from typing import Union
-from fastapi import FastAPI, UploadFile
-from pydantic import BaseModel
-from fastapi.testclient import TestClient
+from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import FileResponse # 回傳圖片
+import os
 
-app = FastAPI() # FastAPI物件
+app = FastAPI() # FastAPI物件初始化
+
+# 獲取圖片
+@app.get("/get-image/{filename}")
+def get_image(filename: str):
+    if os.path.exists(filename):
+        return FileResponse(filename)
+    else:
+        return {"message": "Image not found"}
 
 # 上傳圖片
 @app.post("/upload-image/")
